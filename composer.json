@@ -1,0 +1,20 @@
+{
+    "name": "fiko/magento2-customer-two-factor-auth",
+    "description": "2 factor authentication for Customer",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "MIT"
+    ],
+    "require": {
+        "magento/framework": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fiko\\CustomerTwoFactorAuth\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
