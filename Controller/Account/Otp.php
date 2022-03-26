@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Fiko Borizqy, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -12,6 +13,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\View\Result\PageFactory;
+use OTPHP\TOTP;
 
 /**
  * Login form page. Accepts POST for backward compatibility reasons.
@@ -46,6 +48,12 @@ class Otp extends AbstractAccount implements HttpGetActionInterface, HttpPostAct
      */
     public function execute()
     {
+        // CURRENT PROGRESS >>>>>>>
+        // $totp = TOTP::create('G4XYHSH55AQHHT7B');
+        // echo "secret: {$totp->now()}";
+        // die;
+        // <<<<<<<
+
         if ($this->session->isLoggedIn()) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
