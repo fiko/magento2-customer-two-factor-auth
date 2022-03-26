@@ -7,7 +7,10 @@
         "MIT"
     ],
     "require": {
-        "magento/framework": "*"
+        "magento/framework": "*",
+        "magento/module-customer": "*",
+        "spomky-labs/otphp": "^10.0",
+        "endroid/qr-code": "^3.7"
     },
     "autoload": {
         "psr-4": {
