@@ -1,1 +1,44 @@
-HELLO THERE
+<?php
+/**
+ * Copyright © Fiko Borizqy, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @var $block Fiko\CustomerTwoFactorAuth\Block\Account\Otp
+ */
+
+/**
+ * @var array
+ */
+$otpSession = $block->getData('session') ?: [];
+?>
+
+<form class="form password forget" action="<?= $block->escapeUrl($block->getUrl('*/*/loginpost')); ?>" method="post" id="form-validate" data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')); ?>">
+        <div class="field note"><?= $block->escapeHtml(__('Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below.')); ?></div>
+        <div class="field email required">
+            <label for="otp_code" class="label"><span><?= $block->escapeHtml(__('Authentication Code')); ?></span></label>
+            <div class="control">
+                <input type="hidden" name="login[customer_id]" value="<?= $block->escapeHtmlAttr($otpSession['customer_id']) ?>" required>
+                <input type="text" name="login[otp_code]" alt="Validation Code" id="otp_code" class="input-text" data-mage-init='{"mage/trim-input":{}}' data-validate="{required:true}">
+            </div>
+        </div>
+        <?= $block->getChildHtml('form_additional_info'); ?>
+    </fieldset>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action submit primary"><span><?= $block->escapeHtml(__('Validate Code')); ?></span></button>
+        </div>
+        <div class="secondary">
+            <a class="action secondary" href="<?= $block->escapeUrl($block->getUrl('*/*/login')); ?>"><span><?= $block->escapeHtml(__('Go back')); ?></span></a>
+        </div>
+    </div>
+</form>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/block-submit-on-send": {
+                "formId": "form-validate"
+            }
+        }
+    }
+</script>

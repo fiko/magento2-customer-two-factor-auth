@@ -18,7 +18,7 @@ use Magento\Framework\View\Result\PageFactory;
 /**
  * Login form page. Accepts POST for backward compatibility reasons.
  */
-class Otp extends AbstractAccount implements HttpGetActionInterface, HttpPostActionInterface
+class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
 {
     /**
      * @var Session
@@ -50,7 +50,7 @@ class Otp extends AbstractAccount implements HttpGetActionInterface, HttpPostAct
      */
     public function execute()
     {
-        if ($this->session->isLoggedIn()) {
+        if (!$this->session->isLoggedIn()) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('*/*/');
@@ -58,13 +58,7 @@ class Otp extends AbstractAccount implements HttpGetActionInterface, HttpPostAct
             return $resultRedirect;
         }
 
-        if ($this->authHelper->getSessionOtpLogin() === null) {
-            /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('*/*/login');
-
-            return $resultRedirect;
-        }
+        die('logged in');
 
         // UNCOMMENT THIS >>>>>>>
         // if ($this->sesion->hasOtpOpened()) {

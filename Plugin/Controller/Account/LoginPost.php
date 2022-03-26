@@ -2,15 +2,20 @@
 
 namespace Fiko\CustomerTwoFactorAuth\Plugin\Controller\Account;
 
+use Base32\Base32;
 use Exception;
+use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Account\LoginPost as Subject;
+use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Exception\AuthenticationException;
 use Magento\Framework\Exception\EmailNotConfirmedException;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Model\StoreManagerInterface;
+use OTPHP\TOTP;
 
 /**
  * Handle customer login process to be redirected to OTP page.
@@ -42,24 +47,47 @@ class LoginPost
      */
     protected $resultRedirectFactory;
 
+    /**
+     * @var Fiko\CustomerTwoFactorAuth\Helper\Data
+     */
+    protected $authHelper;
+
+    /**
+     * @var Magento\Customer\Model\ResourceModel\CustomerRepository
+     */
+    protected $customerRepository;
+
+    /**
+     * @var Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    private $otpSucceed = false;
+
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
         Session $session,
+        AuthHelper $authHelper,
+        CustomerRepository $customerRepository,
+        StoreManagerInterface $storeManager,
         Validator $formKeyValidator
     ) {
         $this->messageManager = $context->getMessageManager();
         $this->resultRedirectFactory = $context->getResultRedirectFactory();
         $this->customerAccountManagement = $customerAccountManagement;
         $this->session = $session;
+        $this->authHelper = $authHelper;
+        $this->customerRepository = $customerRepository;
+        $this->storeManager = $storeManager;
         $this->formKeyValidator = $formKeyValidator;
     }
 
     public function aroundExecute(Subject $subject, callable $proceed)
     {
-        // DELETE IT >>>>>>>
-        return $proceed();
-        // <<<<<<<
+        // // DELETE IT >>>>>>>
+        // return $proceed();
+        // // <<<<<<<
 
         if ($this->session->isLoggedIn() || !$this->formKeyValidator->validate($subject->getRequest())) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
@@ -70,15 +98,35 @@ class LoginPost
         }
 
         if ($subject->getRequest()->isPost()) {
+            /*
+             * OTP Process
+             */
+            try {
+                $this->executeValidateOtp($subject);
+            } catch (Exception $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                $resultRedirect = $this->resultRedirectFactory->create();
+                $resultRedirect->setPath('*/*/otp');
+
+                return $resultRedirect;
+            }
+
             $login = $subject->getRequest()->getPost('login');
-            if (!empty($login['username']) && !empty($login['password'])) {
+            if (!empty($login['username']) && !empty($login['password']) && $this->otpSucceed === false) {
                 try {
                     $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
-                    $this->session->setOtpCustomerId($customer->getId());
-                    $resultRedirect = $this->resultRedirectFactory->create();
-                    $resultRedirect->setPath('*/*/otp');
 
-                    return $resultRedirect;
+                    if ($this->authHelper->isCustomerOtpEnable($customer) === true) {
+                        $this->authHelper->setSessionOtpLogin(
+                            $customer->getId(),
+                            $login['username'],
+                            $login['password']
+                        );
+                        $resultRedirect = $this->resultRedirectFactory->create();
+                        $resultRedirect->setPath('*/*/otp', $this->getRedirectReferer($subject));
+
+                        return $resultRedirect;
+                    }
                 } catch (EmailNotConfirmedException $e) {
                     $this->messageManager->addComplexErrorMessage(
                         'confirmAccountErrorMessage',
@@ -103,11 +151,113 @@ class LoginPost
                         $this->session->setUsername($login['username']);
                     }
                 }
-            } else {
-                $this->messageManager->addErrorMessage(__('A login and a password are required.'));
             }
         }
 
         return $proceed();
+    }
+
+    /**
+     * Set redirect page if only there is any referer exists.
+     *
+     * @param Magento\Customer\Controller\Account\LoginPost $subject
+     */
+    private function getRedirectReferer($subject): array
+    {
+        if (empty($subject->getRequest()->getParam('referer'))) {
+            return [];
+        }
+
+        return [
+            'referer' => $subject->getRequest()->getParam('referer'),
+        ];
+    }
+
+    private function executeValidateOtp($subject)
+    {
+        // validate session
+        $otpSession = $this->authHelper->getSessionOtpLogin();
+        if (!isset($otpSession['customer_id']) || !isset($otpSession['username'])) {
+            return;
+        }
+
+        // validate otp_code
+        $login = $subject->getRequest()->getPost('login');
+        if (!isset($login['otp_code']) || !isset($login['customer_id'])) {
+            return;
+        }
+
+        // validate customer
+        if ((int) $login['customer_id'] !== (int) $otpSession['customer_id']) {
+            return;
+        }
+
+        // load customer
+        $customer = $this->customerRepository->getById($otpSession['customer_id']);
+
+        // validating otp code
+        if (!$this->authHelper->verifyCustomerOtp($login['otp_code'], $customer)) {
+            throw new Exception('Wrong authentication code.');
+        }
+
+        // update post value
+        $login['username'] = $otpSession['username'];
+        $login['password'] = $otpSession['password'];
+        $subject->getRequest()->setPostValue('login', $login);
+        $this->otpSucceed = true;
+
+        // remove OTP session
+        $this->authHelper->unsetSessionOtpLogin();
+
+        // // $subject->getRequest()->setPost('a', 'as');
+        // $tmp = $subject->getRequest()->getPost()->toArray();
+        // header("Content-Type: application/json;");
+        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
+
+        // $tmp = $customer->getCustomAttribute('totp_secret')->getValue();
+        // // $tmp = $customer->getTotpSecret();
+        // header("Content-Type: application/json;");
+        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
+
+        // $otpSecret = $this->authHelper->getCustomerOtpSecret($customer);
+        // $tmp = $otpSecret;
+        // header("Content-Type: application/json;");
+        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
+        // die($this->authHelper->generateSecret());
+        // $encoded = Base32::encode($otpSecret);
+        // $decode = Base32::decode('MFRGGZDX5V4IFXNKZFXAYHUCJUDZONSIHWPC4HBZIB6K3JBBLPOOS2LEN353MQVJ');
+        // die($decode);
+
+        // $tmp = $this->storeManager->getStore()->getWebsite()->getName();
+        // header("Content-Type: application/json;");
+        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
+
+        // die($this->authHelper->getProvisioningUrl($customer));
+        // die('success');
+
+        // $qrcode = $this->authHelper->getQrCodeAsPng($customer);
+        // header('Content-Type: image/png');
+        // die($qrcode);
+
+        // $totp->now();
+        // echo "code: {$otpSecret} --- secret: {$totp->now()}";
+
+        // $this->session->setCustomerDataAsLoggedIn($customer);
+        // if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
+        //     $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
+        //     $metadata->setPath('/');
+        //     $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
+        // }
+        // $redirectUrl = $this->accountRedirect->getRedirectCookie();
+        // if (!$this->getScopeConfig()->getValue('customer/startup/redirect_dashboard') && $redirectUrl) {
+        //     $this->accountRedirect->clearRedirectCookie();
+        //     $resultRedirect = $this->resultRedirectFactory->create();
+        //     // URL is checked to be internal in $this->_redirect->success()
+        //     $resultRedirect->setUrl($this->_redirect->success($redirectUrl));
+
+        //     return $resultRedirect;
+        // }
+
+        // throw new Exception('Wrong authentication code.');
     }
 }
