@@ -51,14 +51,30 @@ class Data extends AbstractHelper
      * @param int    $customerId Customer ID
      * @param string $username   it can be email address of the customer
      * @param string $password   password submited by customer
+     * @param bool   $isReload   is it a reloaded request
      */
-    public function setSessionOtpLogin(int $customerId, string $username, string $password): void
-    {
+    public function setSessionOtpLogin(
+        int $customerId,
+        string $username,
+        string $password,
+        bool $isReload = false
+    ): void {
         $this->session->setData(self::OTP_SESSION, [
+            'is_reload' => $isReload,
             'customer_id' => $customerId,
             'username' => $username,
             'password' => $password,
         ]);
+    }
+
+    /**
+     * set Reload Page to be true or false.
+     */
+    public function setReloadPage(bool $isReload): void
+    {
+        $otpSession = $this->getSessionOtpLogin();
+        $otpSession['is_reload'] = $isReload;
+        $this->session->setData(self::OTP_SESSION, $otpSession);
     }
 
     /**
@@ -84,7 +100,7 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Check does the customer enabling OTP Login
+     * Check does the customer enabling OTP Login.
      *
      * @param Magento\Customer\Model\Data\Customer $customer Customer object data
      *

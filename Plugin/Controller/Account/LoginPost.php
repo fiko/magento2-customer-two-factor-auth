@@ -197,6 +197,7 @@ class LoginPost
 
         // validating otp code
         if (!$this->authHelper->verifyCustomerOtp($login['otp_code'], $customer)) {
+            $this->authHelper->setReloadPage(false);
             throw new Exception('Wrong authentication code.');
         }
 

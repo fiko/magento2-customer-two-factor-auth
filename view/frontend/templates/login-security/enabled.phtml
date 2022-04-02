@@ -1,0 +1,27 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* @var \Magento\Customer\Block\Form\Edit $block */
+/* @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+
+$params = $this->request->getParams();
+?>
+
+<div class="block block-addresses-list">
+    <div class="block-title"><strong><?= $block->escapeHtml(__('Two Factor Authentication')); ?></strong></div>
+    <div class="block-content">
+        <p class="empty"><?= $block->escapeHtml(__('Status')); ?>: <strong>Enabled</strong></p>
+        <div class="empty message warning">
+            <span>To protect your account, you can use Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to have additional validation on login page.</span>
+        </div>
+    </div>
+</div>
+
+<div class="actions-toolbar">
+    <div class="primary">
+        <button type="button" role="add-address" title="Add New Address" class="action primary add"><span>Disable Login Security</span></button>
+    </div>
+</div>

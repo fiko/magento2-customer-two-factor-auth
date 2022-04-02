@@ -58,13 +58,22 @@ class Otp extends AbstractAccount implements HttpGetActionInterface, HttpPostAct
             return $resultRedirect;
         }
 
-        if ($this->authHelper->getSessionOtpLogin() === null) {
+        if (($otpSession = $this->authHelper->getSessionOtpLogin()) === null) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('*/*/login');
 
             return $resultRedirect;
         }
+
+        if ($otpSession['is_reload'] === true) {
+            $resultRedirect = $this->resultRedirectFactory->create();
+            $resultRedirect->setPath('*/*/login');
+
+            return $resultRedirect;
+        }
+
+        $this->authHelper->setReloadPage(true);
 
         // UNCOMMENT THIS >>>>>>>
         // if ($this->sesion->hasOtpOpened()) {
