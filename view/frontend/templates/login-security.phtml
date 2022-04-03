@@ -27,7 +27,7 @@
         <?php if ($block->isOtpEnabled()): ?>
             <a href="<?= $block->escapeHtmlAttr($this->urlInterface->getUrl('*/*/disable')); ?>" alt="" class="action primary add"><span><?= $block->escapeHtml(__('Disable Login Security')); ?></span></a>
         <?php else : ?>
-            <a href="<?= $block->escapeHtmlAttr($this->urlInterface->getUrl('*/*/*/enable')); ?>" alt="" class="action primary add"><span><?= $block->escapeHtml(__('Enable Login Security')); ?></span></a>
+            <a href="<?= $block->escapeHtmlAttr($this->urlInterface->getUrl('*/*/enable')); ?>" alt="" class="action primary add"><span><?= $block->escapeHtml(__('Enable Login Security')); ?></span></a>
         <?php endif; ?>
     </div>
 </div>

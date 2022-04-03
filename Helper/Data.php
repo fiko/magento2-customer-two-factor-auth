@@ -27,6 +27,7 @@ class Data extends AbstractHelper
     const TOTP_SECRET = 'totp_secret';
     const IS_ENABLE = 'is_totp_enable';
     const OTP_SESSION = 'fiko_otp_login';
+    const QRCODE_VALIDATION = 'qr_code_validation';
 
     public function __construct(
         Context $context,
@@ -124,12 +125,11 @@ class Data extends AbstractHelper
     /**
      * Get Customer Secret code to generate TOTP.
      *
-     * @param Magento\Customer\Model\Data\Customer $customer Customer object data
-     *
      * @return string|null string of the code or null
      */
-    public function getCustomerOtpSecret(Customer $customer): ?string
+    public function getCustomerOtpSecret(): ?string
     {
+        $customer = $this->getCustomer();
         $attribute = $customer->getCustomAttribute(self::TOTP_SECRET);
 
         return !is_null($attribute) ? $attribute->getValue() : null;
@@ -150,42 +150,44 @@ class Data extends AbstractHelper
     /**
      * Verify submited code by Customer to verify TOTP.
      *
-     * @param string   $otpCode  OTP submited by customer
-     * @param Customer $customer Customer object
+     * @param string $otpToken OTP submited by customer
      */
-    public function verifyCustomerOtp($otpCode, Customer $customer): bool
+    public function verifyCustomerOtp($otpToken): bool
     {
-        $otp = $this->getCustomerOtp($customer);
+        $otp = $this->getCustomerOtp($this->getCustomer());
 
-        return $otp->verify($otpCode) ? true : false;
+        return $otp->verify($otpToken) ? true : false;
     }
 
     /**
      * Get TFA provisioning URL.
      *
-     * @throws NoSuchEntityException
+     * @throws Exception
      */
-    public function getProvisioningUrl(Customer $customer): string
+    public function getProvisioningUrl(): string
     {
-        $websiteName = $this->storeManager->getStore()->getWebsite()->getName();
+        try {
+            $websiteName = $this->storeManager->getStore()->getWebsite()->getName();
+            $customer = $this->getCustomer();
 
-        $totp = $this->getCustomerOtp($customer);
-        $totp->setLabel($customer->getEmail());
-        $totp->setIssuer($websiteName);
+            $totp = $this->getCustomerOtp($customer);
+            $totp->setLabel($customer->getEmail());
+            $totp->setIssuer($websiteName);
 
-        return $totp->getProvisioningUri();
+            return $totp->getProvisioningUri();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
      * Render TFA QrCode.
      *
-     * @param Magento\Customer\Model\Data\Customer $customer Customer object data
-     *
      * @return string string of the image
      */
-    public function getQrCodeAsPng(Customer $customer): string
+    public function getQrCodeAsPng(): string
     {
-        $qrCode = new QrCode($this->getProvisioningUrl($customer));
+        $qrCode = new QrCode($this->getProvisioningUrl($this->getCustomer()));
         $qrCode->setSize(400);
         $qrCode->setMargin(0);
         $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
@@ -229,5 +231,20 @@ class Data extends AbstractHelper
         }
 
         return $attr ? (bool) $attr->getValue() : false;
+    }
+
+    public function installQrCodeValidation()
+    {
+        $this->session->setData(self::QRCODE_VALIDATION, true);
+    }
+
+    public function getQrCodeValidation()
+    {
+        return (bool) $this->session->getData(self::QRCODE_VALIDATION);
+    }
+
+    public function uninstallQrCodeValidation()
+    {
+        $this->session->unsetData(self::QRCODE_VALIDATION);
     }
 }

@@ -7,6 +7,7 @@
 
 namespace Fiko\CustomerTwoFactorAuth\Controller\LoginSecurity;
 
+use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Controller\AbstractAccount;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
@@ -21,10 +22,13 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
 
     public function __construct(
         Context $context,
+        AuthHelper $authHelper,
         PageFactory $resultPageFactory
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
+
+        $this->resultPageFactory = $resultPageFactory;
+        $this->authHelper = $authHelper;
     }
 
     /**
@@ -39,6 +43,12 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
         if ($navigationBlock) {
             $navigationBlock->setActive('customer/loginsecurity');
         }
+
+        $customer = $this->authHelper->getCustomer();
+        $customer->setCustomAttribute(AuthHelper::TOTP_SECRET, $this->authHelper->generateSecret());
+        $this->authHelper->customerRepository->save($customer);
+
+        $this->authHelper->installQrCodeValidation();
 
         return $resultPage;
     }

@@ -12,7 +12,6 @@ use Magento\Customer\Controller\AbstractAccount;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
-use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
@@ -50,32 +49,22 @@ class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
      */
     public function execute()
     {
-        if (!$this->session->isLoggedIn()) {
+        if (
+            !$this->session->isLoggedIn() ||
+            !$this->authHelper->getQrCodeValidation() ||
+            $this->authHelper->isOtpEnabled()
+        ) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('*/*/');
+            $resultRedirect->setPath('*/*');
 
             return $resultRedirect;
         }
 
-        die('logged in');
+        $this->authHelper->uninstallQrCodeValidation();
 
-        // UNCOMMENT THIS >>>>>>>
-        // if ($this->sesion->hasOtpOpened()) {
-        //     //
-        // }
-        // <<<<<<<
-
-        // UNCOMMENT THIS >>>>>>>
-        // // unset data otp_customer_id
-        // $this->session->unsOtpCustomerId();
-        // <<<<<<<
-
-        /** @var \Magento\Framework\View\Result\Page $resultPage */
-        $resultPage = $this->resultPageFactory->create();
-        $resultPage->getLayout()->getBlock('fiko-login-otp-form')
-            ->setData('session', $this->authHelper->getSessionOtpLogin());
-
-        return $resultPage;
+        $image = $this->authHelper->getQrCodeAsPng();
+        header('Content-Type: image/png');
+        die($image);
     }
 }
