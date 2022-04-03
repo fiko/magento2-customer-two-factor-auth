@@ -63,8 +63,7 @@ class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
 
         $this->authHelper->uninstallQrCodeValidation();
 
-        $image = $this->authHelper->getQrCodeAsPng();
-        header('Content-Type: image/png');
-        die($image);
+        return $this->getResponse()->setHeader('Content-Type', 'image/png')
+            ->setBody($this->authHelper->getQrCodeAsPng());
     }
 }

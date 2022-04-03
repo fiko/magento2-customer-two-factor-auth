@@ -7,6 +7,7 @@
 
 namespace Fiko\CustomerTwoFactorAuth\Controller\LoginSecurity;
 
+use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Controller\AbstractAccount;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
@@ -21,10 +22,13 @@ class Disable extends AbstractAccount implements HttpGetActionInterface
 
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        AuthHelper $authHelper
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
+
+        $this->resultPageFactory = $resultPageFactory;
+        $this->authHelper = $authHelper;
     }
 
     /**
@@ -34,6 +38,14 @@ class Disable extends AbstractAccount implements HttpGetActionInterface
      */
     public function execute()
     {
+        if (!$this->authHelper->isOtpEnabled()) {
+            /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+            $resultRedirect = $this->resultRedirectFactory->create();
+            $resultRedirect->setPath('*/*');
+
+            return $resultRedirect;
+        }
+
         $resultPage = $this->resultPageFactory->create();
         $navigationBlock = $resultPage->getLayout()->getBlock('customer_account_navigation');
         if ($navigationBlock) {

@@ -66,7 +66,7 @@ class CustomerAttributeEnableTotp implements DataPatchInterface, PatchRevertable
             'type' => 'int',
             'input' => 'boolean',
             'source' => 'Magento\Eav\Model\Entity\Attribute\Source\Boolean',
-            'label' => 'Enable TOTP',
+            'label' => 'Enable 2FA',
             'required' => false,
             'default' => 0,
             'visible' => true,

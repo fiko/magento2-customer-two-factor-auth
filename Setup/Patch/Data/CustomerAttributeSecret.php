@@ -65,7 +65,7 @@ class CustomerAttributeSecret implements DataPatchInterface, PatchRevertableInte
         $customerSetup->addAttribute(Customer::ENTITY, AuthHelper::TOTP_SECRET, [
             'type' => 'varchar',
             'input' => 'text',
-            'label' => 'TOTP Secret Code',
+            'label' => '2FA Secret Key',
             'required' => false,
             'default' => '',
             'visible' => true,

@@ -127,9 +127,9 @@ class Data extends AbstractHelper
      *
      * @return string|null string of the code or null
      */
-    public function getCustomerOtpSecret(): ?string
+    public function getCustomerOtpSecret(?Customer $customer = null): ?string
     {
-        $customer = $this->getCustomer();
+        $customer = $customer ?: $this->getCustomer();
         $attribute = $customer->getCustomAttribute(self::TOTP_SECRET);
 
         return !is_null($attribute) ? $attribute->getValue() : null;
@@ -150,11 +150,17 @@ class Data extends AbstractHelper
     /**
      * Verify submited code by Customer to verify TOTP.
      *
-     * @param string $otpToken OTP submited by customer
+     * @param string        $otpToken token submitted by customer
+     * @param Customer|null $customer Customer object
+     * @param string        $otpToken OTP submited by customer
+     *
+     * @return bool is it succeed or failed on OTP verification
      */
-    public function verifyCustomerOtp($otpToken): bool
+    public function verifyCustomerOtp($otpToken, ?Customer $customer = null): bool
     {
-        $otp = $this->getCustomerOtp($this->getCustomer());
+        $customer = $customer ?: $this->getCustomer();
+
+        $otp = $this->getCustomerOtp($customer);
 
         return $otp->verify($otpToken) ? true : false;
     }
@@ -204,12 +210,16 @@ class Data extends AbstractHelper
     /**
      * Getting customer object.
      *
+     * @param int $customerId customer Id which will be loaded (default: null)
+     *
      * @return Magento\Customer\Api\Data\CustomerInterface
      */
-    public function getCustomer(): ?CustomerInterface
+    public function getCustomer($customerId = null): ?CustomerInterface
     {
         try {
-            return $this->customerRepository->getById($this->session->getCustomerId());
+            $customerId = $customerId ?: $this->session->getCustomerId();
+
+            return $this->customerRepository->getById($customerId);
         } catch (Exception $e) {
             $this->logger->critical($e->getMessage());
 
@@ -219,11 +229,16 @@ class Data extends AbstractHelper
 
     /**
      * check whether customer OTP is enable or not.
+     *
+     * @param Customer|null $customer customer object or data
+     *
+     * @return bool status of the customer OTP/2FA
      */
-    public function isOtpEnabled(): bool
+    public function isOtpEnabled(?Customer $customer = null): bool
     {
         try {
-            $attr = $this->getCustomer()->getCustomAttribute(self::IS_ENABLE);
+            $customer = $customer ?: $this->getCustomer();
+            $attr = $customer->getCustomAttribute(self::IS_ENABLE);
         } catch (Exception $e) {
             $this->logger->critical($e->getMessage());
 

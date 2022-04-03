@@ -38,6 +38,14 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
      */
     public function execute()
     {
+        if ($this->authHelper->isOtpEnabled()) {
+            /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+            $resultRedirect = $this->resultRedirectFactory->create();
+            $resultRedirect->setPath('*/*');
+
+            return $resultRedirect;
+        }
+
         $resultPage = $this->resultPageFactory->create();
         $navigationBlock = $resultPage->getLayout()->getBlock('customer_account_navigation');
         if ($navigationBlock) {

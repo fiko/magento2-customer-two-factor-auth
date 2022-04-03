@@ -26,10 +26,10 @@ $otpSession = $block->getData('session') ?: [];
     </fieldset>
     <div class="actions-toolbar">
         <div class="primary">
-            <button type="submit" class="action submit primary"><span><?= $block->escapeHtml(__('Validate Code')); ?></span></button>
+            <button type="submit" class="action submit primary"><span><?= $block->escapeHtml(__('Continue')); ?></span></button>
         </div>
         <div class="secondary">
-            <a class="action secondary" href="<?= $block->escapeUrl($block->getUrl('*/*/login')); ?>"><span><?= $block->escapeHtml(__('Go back')); ?></span></a>
+            <a class="action secondary" href="<?= $block->escapeUrl($block->getUrl('*/*/login')); ?>"><span><?= $block->escapeHtml(__('Go Back')); ?></span></a>
         </div>
     </div>
 </form>
