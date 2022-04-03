@@ -12,7 +12,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Fiko\CustomerTwoFactorAuth\Block\LoginSecurity" name="fiko_loginsecurity_content" as="content_main" template="Fiko_CustomerTwoFactorAuth::login-security.phtml" cacheable="false" />
+            <block class="Fiko\CustomerTwoFactorAuth\Block\LoginSecurity" name="fiko_loginsecurity_content" as="content_main" template="Fiko_CustomerTwoFactorAuth::form/disable.phtml" cacheable="false" />
         </referenceContainer>
     </body>
 </page>

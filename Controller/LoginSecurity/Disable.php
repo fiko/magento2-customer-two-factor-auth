@@ -34,6 +34,12 @@ class Disable extends AbstractAccount implements HttpGetActionInterface
      */
     public function execute()
     {
-        return $this->resultPageFactory->create();
+        $resultPage = $this->resultPageFactory->create();
+        $navigationBlock = $resultPage->getLayout()->getBlock('customer_account_navigation');
+        if ($navigationBlock) {
+            $navigationBlock->setActive('customer/loginsecurity');
+        }
+
+        return $resultPage;
     }
 }

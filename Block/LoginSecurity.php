@@ -26,6 +26,7 @@ class LoginSecurity extends Template
         LoggerInterface $logger,
         RequestInterface $request,
         UrlInterface $urlInterface,
+        AuthHelper $authHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -35,21 +36,11 @@ class LoginSecurity extends Template
         $this->logger = $logger;
         $this->request = $request;
         $this->urlInterface = $urlInterface;
-    }
-
-    public function getCustomer()
-    {
-        try {
-            return $this->customerRepository->getById($this->session->getCustomerId());
-        } catch (Exception $e) {
-            $this->logger->critical($e->getMessage());
-        }
+        $this->authHelper = $authHelper;
     }
 
     public function isOtpEnabled()
     {
-        $attr = $this->getCustomer()->getCustomAttribute(AuthHelper::IS_ENABLE);
-
-        return $attr ? (bool) $attr->getValue() : false;
+        return $this->authHelper->isOtpEnabled();
     }
 }

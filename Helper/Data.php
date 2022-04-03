@@ -11,12 +11,16 @@ use Base32\Base32;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Exception;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Data\Customer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use OTPHP\TOTP;
+use Psr\Log\LoggerInterface;
 
 class Data extends AbstractHelper
 {
@@ -28,6 +32,8 @@ class Data extends AbstractHelper
         Context $context,
         Session $session,
         StoreManagerInterface $storeManager,
+        CustomerRepositoryInterface $customerRepository,
+        LoggerInterface $logger,
         array $data = []
     ) {
         parent::__construct($context);
@@ -35,6 +41,8 @@ class Data extends AbstractHelper
         $this->session = $session;
         $this->storeManager = $storeManager;
         $this->data = $data;
+        $this->customerRepository = $customerRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -189,5 +197,37 @@ class Data extends AbstractHelper
         $writer = new PngWriter();
 
         return $writer->writeString($qrCode);
+    }
+
+    /**
+     * Getting customer object.
+     *
+     * @return Magento\Customer\Api\Data\CustomerInterface
+     */
+    public function getCustomer(): ?CustomerInterface
+    {
+        try {
+            return $this->customerRepository->getById($this->session->getCustomerId());
+        } catch (Exception $e) {
+            $this->logger->critical($e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
+     * check whether customer OTP is enable or not.
+     */
+    public function isOtpEnabled(): bool
+    {
+        try {
+            $attr = $this->getCustomer()->getCustomAttribute(self::IS_ENABLE);
+        } catch (Exception $e) {
+            $this->logger->critical($e->getMessage());
+
+            return false;
+        }
+
+        return $attr ? (bool) $attr->getValue() : false;
     }
 }
