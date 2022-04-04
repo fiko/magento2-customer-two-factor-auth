@@ -18,3 +18,6 @@
 "Input your current password to disable your login security.", "Input your current password to disable your login security."
 "Two Factor Authentication has been disabled.", "Two Factor Authentication has been disabled."
 "Password is incorrect.", "Password is incorrect."
+"Are you sure you want to re-generate the customer's 2FA secret key?", "Are you sure you want to re-generate the customer's 2FA secret key?"
+"Two factor Authentication already enabled for this customer.", "Two factor Authentication already enabled for this customer."
+"Two Factor Authentication secret key generated with the new one.", "Two Factor Authentication secret key generated with the new one."

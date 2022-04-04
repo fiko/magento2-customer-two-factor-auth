@@ -9,12 +9,13 @@ namespace Fiko\CustomerTwoFactorAuth\Block\Adminhtml\Edit;
 use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Customer\Block\Adminhtml\Edit\GenericButton;
-use Magento\Framework\Registry;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
- * Class BackButton.
+ * Class Generate 2FA Secret Key
  */
 class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInterface
 {
@@ -27,11 +28,13 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
         Context $context,
         Registry $registry,
         RequestInterface $request,
+        AuthorizationInterface $authorization,
         AuthHelper $authHelper
     ) {
         parent::__construct($context, $registry);
 
         $this->request = $request;
+        $this->authorization = $authorization;
         $this->authHelper = $authHelper;
     }
 
@@ -42,13 +45,18 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
     {
         $customerId = $this->request->getParam('id');
         $customer = $this->authHelper->getCustomer($customerId);
-        if ($this->authHelper->isOtpEnabled($customer)) {
+        $deleteConfirmMsg = __("Are you sure you want to re-generate the customer's 2FA secret key?");
+
+        if (
+            $this->authHelper->isOtpEnabled($customer) ||
+            $this->authorization->isAllowed(AuthHelper::ACL_GENERATE_SECRET_KEY) === false
+        ) {
             return [];
         }
 
         return [
             'label' => __('Generate 2FA Secret Key'),
-            'on_click' => sprintf("location.href = '%s';", $this->getBackUrl()),
+            'on_click' => 'deleteConfirm("'.$deleteConfirmMsg.'", "'.$this->getGenerateSecretKeyUrl().'")',
             'class' => 'fiko-generate-2fa-key',
             'sort_order' => 50,
         ];
@@ -59,8 +67,8 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
      *
      * @return string
      */
-    public function getBackUrl()
+    public function getGenerateSecretKeyUrl()
     {
-        return $this->getUrl('*/*/');
+        return $this->getUrl('customer/loginsecurity/generatesecretkey', ['id' => $this->getCustomerId()]);
     }
 }

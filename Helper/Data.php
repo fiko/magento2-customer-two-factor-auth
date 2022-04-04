@@ -28,6 +28,7 @@ class Data extends AbstractHelper
     const IS_ENABLE = 'is_totp_enable';
     const OTP_SESSION = 'fiko_otp_login';
     const QRCODE_VALIDATION = 'qr_code_validation';
+    const ACL_GENERATE_SECRET_KEY = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
     public function __construct(
         Context $context,

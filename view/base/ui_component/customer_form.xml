@@ -11,4 +11,12 @@
             <button name="fiko_loginsecurity_generate_key" class="Fiko\CustomerTwoFactorAuth\Block\Adminhtml\Edit\GenerateSecretKeyButton" />
         </buttons>
     </settings>
+    <fieldset name="customer">
+        <field name="is_totp_enable" sortOrder="110" />
+        <field name="totp_secret" sortOrder="111">
+            <settings>
+                <disabled>true</disabled>
+            </settings>
+        </field>
+    </fieldset>
 </form>
