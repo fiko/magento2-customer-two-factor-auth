@@ -52,11 +52,15 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
             $navigationBlock->setActive('customer/loginsecurity');
         }
 
-        $customer = $this->authHelper->getCustomer();
-        $customer->setCustomAttribute(AuthHelper::TOTP_SECRET, $this->authHelper->generateSecret());
-        $this->authHelper->customerRepository->save($customer);
+        if ($this->authHelper->session->getData(AuthHelper::ENABLING_2FA) !== true) {
+            $customer = $this->authHelper->getCustomer();
+            $customer->setCustomAttribute(AuthHelper::TOTP_SECRET, $this->authHelper->generateSecret());
+            $this->authHelper->customerRepository->save($customer);
+        } else {
+            $this->authHelper->session->unsetData(AuthHelper::ENABLING_2FA);
+        }
 
-        $this->authHelper->installQrCodeValidation();
+        $this->authHelper->session->setData(AuthHelper::QRCODE_VALIDATION, true);
 
         return $resultPage;
     }

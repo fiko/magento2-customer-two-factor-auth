@@ -51,7 +51,7 @@ class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
     {
         if (
             !$this->session->isLoggedIn() ||
-            !$this->authHelper->getQrCodeValidation() ||
+            $this->authHelper->session->getData(AuthHelper::QRCODE_VALIDATION) !== true ||
             $this->authHelper->isOtpEnabled()
         ) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
@@ -61,7 +61,7 @@ class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
             return $resultRedirect;
         }
 
-        $this->authHelper->uninstallQrCodeValidation();
+        $this->authHelper->session->unsetData(AuthHelper::QRCODE_VALIDATION);
 
         return $this->getResponse()->setHeader('Content-Type', 'image/png')
             ->setBody($this->authHelper->getQrCodeAsPng());

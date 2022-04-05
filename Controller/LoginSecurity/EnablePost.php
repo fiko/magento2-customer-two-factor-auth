@@ -7,16 +7,15 @@
 
 namespace Fiko\CustomerTwoFactorAuth\Controller\LoginSecurity;
 
+use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\AbstractAccount;
 use Magento\Customer\Model\AuthenticationInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\Exception\InvalidEmailOrPasswordException;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Message\Manager as MessageManager;
-use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
+use Magento\Framework\View\Result\PageFactory;
 
 class EnablePost extends AbstractAccount implements HttpPostActionInterface
 {
@@ -69,10 +68,14 @@ class EnablePost extends AbstractAccount implements HttpPostActionInterface
             return $resultRedirect;
         }
 
-        if (! $this->authHelper->verifyCustomerOtp($otpToken)) {
+        if (!$this->authHelper->verifyCustomerOtp($otpToken)) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('*/*/enable');
+            $this->authHelper->session->setData(AuthHelper::ENABLING_2FA, true);
+            $this->messageManager->addErrorMessage(
+                __('Wrong Confirmation Code, please try again with the latest code.')
+            );
 
             return $resultRedirect;
         }

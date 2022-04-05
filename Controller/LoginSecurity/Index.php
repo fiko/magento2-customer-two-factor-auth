@@ -23,8 +23,9 @@ class Index extends AbstractAccount implements HttpGetActionInterface
         Context $context,
         PageFactory $resultPageFactory
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
+
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     /**

@@ -21,3 +21,4 @@
 "Are you sure you want to re-generate the customer's 2FA secret key?", "Are you sure you want to re-generate the customer's 2FA secret key?"
 "Two factor Authentication already enabled for this customer.", "Two factor Authentication already enabled for this customer."
 "Two Factor Authentication secret key generated with the new one.", "Two Factor Authentication secret key generated with the new one."
+"Wrong Confirmation Code, please try again with the latest code.", "Wrong Confirmation Code, please try again with the latest code."

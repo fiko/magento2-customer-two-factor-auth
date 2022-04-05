@@ -28,6 +28,7 @@ class Data extends AbstractHelper
     const IS_ENABLE = 'is_totp_enable';
     const OTP_SESSION = 'fiko_otp_login';
     const QRCODE_VALIDATION = 'qr_code_validation';
+    const ENABLING_2FA = '2fa_enabling';
     const ACL_GENERATE_SECRET_KEY = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
     public function __construct(
@@ -247,20 +248,5 @@ class Data extends AbstractHelper
         }
 
         return $attr ? (bool) $attr->getValue() : false;
-    }
-
-    public function installQrCodeValidation()
-    {
-        $this->session->setData(self::QRCODE_VALIDATION, true);
-    }
-
-    public function getQrCodeValidation()
-    {
-        return (bool) $this->session->getData(self::QRCODE_VALIDATION);
-    }
-
-    public function uninstallQrCodeValidation()
-    {
-        $this->session->unsetData(self::QRCODE_VALIDATION);
     }
 }
