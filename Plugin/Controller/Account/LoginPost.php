@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * Copyright © Fiko Borizqy, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 namespace Fiko\CustomerTwoFactorAuth\Plugin\Controller\Account;
 
-use Base32\Base32;
 use Exception;
 use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Api\AccountManagementInterface;
@@ -15,10 +19,9 @@ use Magento\Framework\Exception\AuthenticationException;
 use Magento\Framework\Exception\EmailNotConfirmedException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
-use OTPHP\TOTP;
 
 /**
- * Handle customer login process to be redirected to OTP page.
+ * customer login process to be redirected to OTP page Plugin.
  */
 class LoginPost
 {
@@ -83,15 +86,20 @@ class LoginPost
         $this->formKeyValidator = $formKeyValidator;
     }
 
+    /**
+     * * customer login process to be redirected to OTP page Handler.
+     *
+     * @param \Magento\Customer\Controller\Account\LoginPost $subject Main class
+     * @param callable                                       $proceed main method
+     *
+     * @return void
+     */
     public function aroundExecute(Subject $subject, callable $proceed)
     {
-        // // DELETE IT >>>>>>>
-        // return $proceed();
-        // // <<<<<<<
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultRedirectFactory->create();
 
         if ($this->session->isLoggedIn() || !$this->formKeyValidator->validate($subject->getRequest())) {
-            /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-            $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('*/*/');
 
             return $resultRedirect;
@@ -105,7 +113,6 @@ class LoginPost
                 $this->executeValidateOtp($subject);
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $resultRedirect = $this->resultRedirectFactory->create();
                 $resultRedirect->setPath('*/*/otp');
 
                 return $resultRedirect;
@@ -122,7 +129,6 @@ class LoginPost
                             $login['username'],
                             $login['password']
                         );
-                        $resultRedirect = $this->resultRedirectFactory->create();
                         $resultRedirect->setPath('*/*/otp', $this->getRedirectReferer($subject));
 
                         return $resultRedirect;
@@ -173,6 +179,13 @@ class LoginPost
         ];
     }
 
+    /**
+     * Execution of validating OTP token sent by customer.
+     *
+     * @param Subject $subject Main class
+     *
+     * @return void
+     */
     private function executeValidateOtp($subject)
     {
         // validate session
@@ -197,6 +210,7 @@ class LoginPost
 
         // validating otp code
         if (!$this->authHelper->verifyCustomerOtp($login['otp_code'], $customer)) {
+            $this->authHelper->setReloadPage(false);
             throw new Exception('Wrong authentication code.');
         }
 
@@ -208,56 +222,5 @@ class LoginPost
 
         // remove OTP session
         $this->authHelper->unsetSessionOtpLogin();
-
-        // // $subject->getRequest()->setPost('a', 'as');
-        // $tmp = $subject->getRequest()->getPost()->toArray();
-        // header("Content-Type: application/json;");
-        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
-
-        // $tmp = $customer->getCustomAttribute('totp_secret')->getValue();
-        // // $tmp = $customer->getTotpSecret();
-        // header("Content-Type: application/json;");
-        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
-
-        // $otpSecret = $this->authHelper->getCustomerOtpSecret($customer);
-        // $tmp = $otpSecret;
-        // header("Content-Type: application/json;");
-        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
-        // die($this->authHelper->generateSecret());
-        // $encoded = Base32::encode($otpSecret);
-        // $decode = Base32::decode('MFRGGZDX5V4IFXNKZFXAYHUCJUDZONSIHWPC4HBZIB6K3JBBLPOOS2LEN353MQVJ');
-        // die($decode);
-
-        // $tmp = $this->storeManager->getStore()->getWebsite()->getName();
-        // header("Content-Type: application/json;");
-        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
-
-        // die($this->authHelper->getProvisioningUrl($customer));
-        // die('success');
-
-        // $qrcode = $this->authHelper->getQrCodeAsPng($customer);
-        // header('Content-Type: image/png');
-        // die($qrcode);
-
-        // $totp->now();
-        // echo "code: {$otpSecret} --- secret: {$totp->now()}";
-
-        // $this->session->setCustomerDataAsLoggedIn($customer);
-        // if ($this->getCookieManager()->getCookie('mage-cache-sessid')) {
-        //     $metadata = $this->getCookieMetadataFactory()->createCookieMetadata();
-        //     $metadata->setPath('/');
-        //     $this->getCookieManager()->deleteCookie('mage-cache-sessid', $metadata);
-        // }
-        // $redirectUrl = $this->accountRedirect->getRedirectCookie();
-        // if (!$this->getScopeConfig()->getValue('customer/startup/redirect_dashboard') && $redirectUrl) {
-        //     $this->accountRedirect->clearRedirectCookie();
-        //     $resultRedirect = $this->resultRedirectFactory->create();
-        //     // URL is checked to be internal in $this->_redirect->success()
-        //     $resultRedirect->setUrl($this->_redirect->success($redirectUrl));
-
-        //     return $resultRedirect;
-        // }
-
-        // throw new Exception('Wrong authentication code.');
     }
 }

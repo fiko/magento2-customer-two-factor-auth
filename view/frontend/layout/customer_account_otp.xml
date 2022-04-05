@@ -11,8 +11,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Fiko\CustomerTwoFactorAuth\Block\Account\Otp" name="fiko-login-otp-form" template="Fiko_CustomerTwoFactorAuth::form/otp.phtml" cacheable="false">
-            <!-- <block class="Fiko\CustomerTwoFactorAuth\Block\Account\Otp" name="fikoLoginOtp" template="Fiko_CustomerTwoFactorAuth::form/otp.phtml"> -->
+            <block class="Magento\Framework\View\Element\Template" name="fiko-login-otp-form" template="Fiko_CustomerTwoFactorAuth::form/otp.phtml" cacheable="false">
                 <container name="form.additional.info" as="form_additional_info"/>
             </block>
         </referenceContainer>

@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © Fiko Borizqy, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @var \Fiko\CustomerTwoFactorAuth\Block\LoginSecurity $block
+ */
+?>
+
+<form class="form form-edit-account" action="<?= $block->escapeUrl($block->getUrl('*/*/disablepost')); ?>" method="post" id="form-validate" autocomplete="off" data-mage-init='{"validation": {}}'>
+    <fieldset class="fieldset info">
+        <?= $block->getBlockHtml('formkey'); ?>
+        <legend class="legend"><span><?= $block->escapeHtml(__('Disable Two Factor Authentication')); ?></span></legend><br>
+
+        <div class="field required">
+            <label class="label" for="current-password"><span><?= $block->escapeHtml(__('Current Password')); ?></span></label>
+            <div class="control">
+                <input type="password" id="current-password" name="current-password" title="<?= $block->escapeHtmlAttr(__('Current Password')); ?>" class="input-text required-entry" data-validate="{required:true}" aria-required="true" required data-mage-init='{"mage/trim-input":{}}'>
+            </div>
+        </div>
+
+        <div class="field required">
+            <small><i><?= $block->escapeHtml(__('Input your current password to disable your login security.')); ?></i></small>
+        </div>
+    </fieldset>
+
+    <fieldset class="fieldset info"></fieldset>
+
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action save primary" title="Save">
+                <span><?= $block->escapeHtml(__('Save')); ?></span>
+            </button>
+        </div>
+        <div class="secondary">
+            <a class="action" href="<?= $block->escapeUrl($block->getUrl('*/*')); ?>">
+                <span>&larr; <?= $block->escapeHtml(__('Cancel')); ?></span>
+            </a>
+        </div>
+    </div>
+</form>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/block-submit-on-send": {
+                "formId": "form-validate"
+            }
+        }
+    }
+</script>

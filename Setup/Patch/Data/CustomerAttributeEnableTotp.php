@@ -15,6 +15,9 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
+/**
+ * Customer Enable OTP attribute class.
+ */
 class CustomerAttributeEnableTotp implements DataPatchInterface, PatchRevertableInterface
 {
     /**
@@ -66,7 +69,7 @@ class CustomerAttributeEnableTotp implements DataPatchInterface, PatchRevertable
             'type' => 'int',
             'input' => 'boolean',
             'source' => 'Magento\Eav\Model\Entity\Attribute\Source\Boolean',
-            'label' => 'Enable TOTP',
+            'label' => 'Enable 2FA',
             'required' => false,
             'default' => 0,
             'visible' => true,

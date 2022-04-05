@@ -15,6 +15,9 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
+/**
+ * Customer attribute to store secret key class.
+ */
 class CustomerAttributeSecret implements DataPatchInterface, PatchRevertableInterface
 {
     /**
@@ -65,7 +68,7 @@ class CustomerAttributeSecret implements DataPatchInterface, PatchRevertableInte
         $customerSetup->addAttribute(Customer::ENTITY, AuthHelper::TOTP_SECRET, [
             'type' => 'varchar',
             'input' => 'text',
-            'label' => 'TOTP Secret Code',
+            'label' => '2FA Secret Key',
             'required' => false,
             'default' => '',
             'visible' => true,
@@ -130,7 +133,7 @@ class CustomerAttributeSecret implements DataPatchInterface, PatchRevertableInte
     }
 
     /**
-     * This is version of the patch, it will be executed once the patch version is not lower than the module version
+     * This is version of the patch, it will be executed once the patch version is not lower than the module version.
      *
      * @return string
      */
