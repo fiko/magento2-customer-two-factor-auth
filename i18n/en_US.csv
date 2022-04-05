@@ -22,3 +22,4 @@
 "Two factor Authentication already enabled for this customer.", "Two factor Authentication already enabled for this customer."
 "Two Factor Authentication secret key generated with the new one.", "Two Factor Authentication secret key generated with the new one."
 "Wrong Confirmation Code, please try again with the latest code.", "Wrong Confirmation Code, please try again with the latest code."
+"Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below.", "Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below."

@@ -15,6 +15,9 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
+/**
+ * Customer Enable OTP attribute class.
+ */
 class CustomerAttributeEnableTotp implements DataPatchInterface, PatchRevertableInterface
 {
     /**

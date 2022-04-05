@@ -2,9 +2,9 @@
 /**
  * Copyright © Fiko Borizqy, Inc. All rights reserved.
  * See COPYING.txt for license details.
+ *
+ * @var \Fiko\CustomerTwoFactorAuth\Block\LoginSecurity $block
  */
-
-/* @var \Fiko\CustomerTwoFactorAuth\Block\LoginSecurity $block */
 ?>
 
 <form class="form form-edit-account" action="<?= $block->escapeUrl($block->getUrl('*/*/enablepost')); ?>" method="post" id="form-validate" autocomplete="off" data-mage-init='{"validation": {}}'>
@@ -16,11 +16,11 @@
             <div class="message info">
                 <span>Scan this QR Code using Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to secure your account.</span>
             </div>
-            <center><img src="<?= $block->escapeUrl($block->getUrl('*/account/otpqrcodeimage')) ?>" alt="" /></center>
+            <center><img src="<?= $block->escapeUrl($block->getUrl('*/account/otpqrcodeimage')); ?>" alt="" /></center>
         </div>
 
         <div class="field">
-            <i><?= __('if you can not scan the QR Code above, copy this code to your authenticator app : %1', "<strong>{$block->authHelper->getCustomerOtpSecret()}</strong>") ?></i>
+            <i><?= __('if you can not scan the QR Code above, copy this code to your authenticator app : %1', "<strong>{$block->authHelper->getCustomerOtpSecret()}</strong>"); ?></i>
         </div>
 
         <div class="field required">

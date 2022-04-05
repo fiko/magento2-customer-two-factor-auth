@@ -9,82 +9,70 @@ namespace Fiko\CustomerTwoFactorAuth\Controller\Account;
 
 use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Controller\AbstractAccount;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Login form page. Accepts POST for backward compatibility reasons.
+ * 2FA form page.
  */
 class Otp extends AbstractAccount implements HttpGetActionInterface, HttpPostActionInterface
 {
     /**
-     * @var Session
+     * @var AuthHelper
      */
-    protected $session;
+    protected $authHelper;
 
     /**
      * @var PageFactory
      */
     protected $resultPageFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param Context     $context           context class for parent class purpose
+     * @param AuthHelper  $authHelper        This extension helper
+     * @param PageFactory $resultPageFactory class to return magento UI
+     */
     public function __construct(
         Context $context,
-        Session $customerSession,
         AuthHelper $authHelper,
         PageFactory $resultPageFactory
     ) {
         parent::__construct($context);
 
-        $this->session = $customerSession;
         $this->authHelper = $authHelper;
         $this->resultPageFactory = $resultPageFactory;
     }
 
     /**
-     * Customer login form page.
+     * Main method of the current page.
      *
      * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\View\Result\Page
      */
     public function execute()
     {
-        if ($this->session->isLoggedIn()) {
-            /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-            $resultRedirect = $this->resultRedirectFactory->create();
+        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultRedirectFactory->create();
+
+        // validate is the customer already login or not
+        if ($this->authHelper->session->isLoggedIn()) {
             $resultRedirect->setPath('*/*/');
 
             return $resultRedirect;
         }
 
-        if (($otpSession = $this->authHelper->getSessionOtpLogin()) === null) {
-            /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
-            $resultRedirect = $this->resultRedirectFactory->create();
+        // validate the OTP Session and checking is it a reloaded page or not
+        if (($otpSession = $this->authHelper->getSessionOtpLogin()) === null || $otpSession['is_reload'] === true) {
             $resultRedirect->setPath('*/*/login');
 
             return $resultRedirect;
         }
 
-        if ($otpSession['is_reload'] === true) {
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('*/*/login');
-
-            return $resultRedirect;
-        }
-
+        // set reload page so once the customer reload the page, it will redirect the customer to login page
         $this->authHelper->setReloadPage(true);
-
-        // UNCOMMENT THIS >>>>>>>
-        // if ($this->sesion->hasOtpOpened()) {
-        //     //
-        // }
-        // <<<<<<<
-
-        // UNCOMMENT THIS >>>>>>>
-        // // unset data otp_customer_id
-        // $this->session->unsOtpCustomerId();
-        // <<<<<<<
 
         /** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();

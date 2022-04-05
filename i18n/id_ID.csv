@@ -22,3 +22,4 @@
 "Two factor Authentication already enabled for this customer.", "Verifikasi Dua Langkah sudah diaktifkan untuk customer ini."
 "Two Factor Authentication secret key generated with the new one.", "Secrey Key Verifikasi Dua Langkah sudah diperbaharui dengan yang baru."
 "Wrong Confirmation Code, please try again with the latest code.", "Kode Konfirmasi Salah, ulangi lagi dengan kode yang terbaru."
+"Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below.", "Buka aplikasi verifikasi dua langkah anda (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) dan ketik kode yang ada pada kotak dibawah."

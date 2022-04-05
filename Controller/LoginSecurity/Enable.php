@@ -13,6 +13,9 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Enable page and form controller.
+ */
 class Enable extends AbstractAccount implements HttpGetActionInterface
 {
     /**
@@ -20,6 +23,18 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
      */
     protected $resultPageFactory;
 
+    /**
+     * @var AuthHelper
+     */
+    protected $authHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param Context     $context           Parent class purposes
+     * @param AuthHelper  $authHelper        Current extension helper
+     * @param PageFactory $resultPageFactory Magento page response for controller
+     */
     public function __construct(
         Context $context,
         AuthHelper $authHelper,
@@ -32,9 +47,9 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
     }
 
     /**
-     * Default customer account page.
+     * Enable page and form handler.
      *
-     * @return \Magento\Framework\View\Result\Page
+     * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\View\Result\Page
      */
     public function execute()
     {
@@ -46,12 +61,17 @@ class Enable extends AbstractAccount implements HttpGetActionInterface
             return $resultRedirect;
         }
 
+        // setup active menu
         $resultPage = $this->resultPageFactory->create();
         $navigationBlock = $resultPage->getLayout()->getBlock('customer_account_navigation');
         if ($navigationBlock) {
             $navigationBlock->setActive('customer/loginsecurity');
         }
 
+        /*
+         * if customer already confirm the code and the code were wrong, secret
+         * key does not have to be re-generate on each refreshed page
+         */
         if ($this->authHelper->session->getData(AuthHelper::ENABLING_2FA) !== true) {
             $customer = $this->authHelper->getCustomer();
             $customer->setCustomAttribute(AuthHelper::TOTP_SECRET, $this->authHelper->generateSecret());

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright © Fiko Borizqy, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -43,9 +43,39 @@ use Magento\Newsletter\Model\SubscriberFactory;
 class GenerateSecretKey extends Index implements HttpGetActionInterface
 {
     /**
+     * @var AuthHelper
+     */
+    protected $authHelper;
+
+    /**
      * Constructor.
      *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @param Context                       $context                       parent class purposes
+     * @param Registry                      $coreRegistry                  parent class purposes
+     * @param FileFactory                   $fileFactory                   parent class purposes
+     * @param CustomerFactory               $customerFactory               parent class purposes
+     * @param AddressFactory                $addressFactory                parent class purposes
+     * @param FormFactory                   $formFactory                   parent class purposes
+     * @param SubscriberFactory             $subscriberFactory             parent class purposes
+     * @param View                          $viewHelper                    parent class purposes
+     * @param Random                        $random                        parent class purposes
+     * @param CustomerRepositoryInterface   $customerRepository            parent class purposes
+     * @param ExtensibleDataObjectConverter $extensibleDataObjectConverter parent class purposes
+     * @param Mapper                        $addressMapper                 parent class purposes
+     * @param AccountManagementInterface    $customerAccountManagement     parent class purposes
+     * @param AddressRepositoryInterface    $addressRepository             parent class purposes
+     * @param CustomerInterfaceFactory      $customerDataFactory           parent class purposes
+     * @param AddressInterfaceFactory       $addressDataFactory            parent class purposes
+     * @param CustomerMapper                $customerMapper                parent class purposes
+     * @param DataObjectProcessor           $dataObjectProcessor           parent class purposes
+     * @param DataObjectHelper              $dataObjectHelper              parent class purposes
+     * @param ObjectFactory                 $objectFactory                 parent class purposes
+     * @param LayoutFactory                 $layoutFactory                 parent class purposes
+     * @param ResultLayoutFactory           $resultLayoutFactory           parent class purposes
+     * @param PageFactory                   $resultPageFactory             parent class purposes
+     * @param ForwardFactory                $resultForwardFactory          parent class purposes
+     * @param JsonFactory                   $resultJsonFactory             parent class purposes
+     * @param AuthHelper                    $authHelper                    Helper of the current extension
      */
     public function __construct(
         Context $context,
@@ -114,7 +144,7 @@ class GenerateSecretKey extends Index implements HttpGetActionInterface
     const ADMIN_RESOURCE = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
     /**
-     * Reset password handler.
+     * Generate Secret Key handler.
      *
      * @return \Magento\Backend\Model\View\Result\Redirect
      */

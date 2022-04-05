@@ -13,6 +13,9 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Disable page and form controller.
+ */
 class Disable extends AbstractAccount implements HttpGetActionInterface
 {
     /**
@@ -20,6 +23,13 @@ class Disable extends AbstractAccount implements HttpGetActionInterface
      */
     protected $resultPageFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param Context     $context           Parent class purposes
+     * @param PageFactory $resultPageFactory Magento page response for controller
+     * @param AuthHelper  $authHelper        Current extension helper
+     */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
@@ -32,9 +42,9 @@ class Disable extends AbstractAccount implements HttpGetActionInterface
     }
 
     /**
-     * Default customer account page.
+     * Disable page and form handler.
      *
-     * @return \Magento\Framework\View\Result\Page
+     * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\View\Result\Page
      */
     public function execute()
     {

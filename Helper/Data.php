@@ -31,6 +31,16 @@ class Data extends AbstractHelper
     const ENABLING_2FA = '2fa_enabling';
     const ACL_GENERATE_SECRET_KEY = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
+    /**
+     * Constructor.
+     *
+     * @param Context                     $context            Parent class purposes
+     * @param Session                     $session            Session class
+     * @param StoreManagerInterface       $storeManager       Store manager class
+     * @param CustomerRepositoryInterface $customerRepository Customer repository purposes
+     * @param LoggerInterface             $logger             Loggin purposes
+     * @param array                       $data               extra data that might be useful for type / VirtualType
+     */
     public function __construct(
         Context $context,
         Session $session,
@@ -80,6 +90,8 @@ class Data extends AbstractHelper
 
     /**
      * set Reload Page to be true or false.
+     *
+     * @param bool $isReload is the current page is refreshed or not
      */
     public function setReloadPage(bool $isReload): void
     {
@@ -113,7 +125,7 @@ class Data extends AbstractHelper
     /**
      * Check does the customer enabling OTP Login.
      *
-     * @param Magento\Customer\Model\Data\Customer $customer Customer object data
+     * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
      *
      * @return int string of the code or null
      */
@@ -126,6 +138,8 @@ class Data extends AbstractHelper
 
     /**
      * Get Customer Secret code to generate TOTP.
+     *
+     * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
      *
      * @return string|null string of the code or null
      */
@@ -140,7 +154,7 @@ class Data extends AbstractHelper
     /**
      * get customer TOTP Object.
      *
-     * @param Customer $customer Customer object
+     * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
      */
     public function getCustomerOtp(Customer $customer): TOTP
     {

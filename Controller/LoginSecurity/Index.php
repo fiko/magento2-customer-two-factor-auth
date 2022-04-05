@@ -12,6 +12,9 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Main Page of Account Security Controller.
+ */
 class Index extends AbstractAccount implements HttpGetActionInterface
 {
     /**
@@ -19,6 +22,12 @@ class Index extends AbstractAccount implements HttpGetActionInterface
      */
     protected $resultPageFactory;
 
+    /**
+     * Constructor.
+     *
+     * @param Context     $context           Parent class purposes
+     * @param PageFactory $resultPageFactory Magento page response for controller
+     */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory
@@ -29,7 +38,7 @@ class Index extends AbstractAccount implements HttpGetActionInterface
     }
 
     /**
-     * Default customer account page.
+     * Main Page of Account Security handler.
      *
      * @return \Magento\Framework\View\Result\Page
      */

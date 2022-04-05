@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright © Fiko Borizqy, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -15,14 +16,33 @@ use Magento\Framework\Registry;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 /**
- * Class Generate 2FA Secret Key
+ * Generate 2FA Secret Key Button Block.
  */
 class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInterface
 {
     /**
-     * @param Context    $context    parent class requirement
-     * @param Registry   $registry   parent class requirement
-     * @param AuthHelper $authHelper This module helper
+     * @var RequestInterface
+     */
+    public $request;
+
+    /**
+     * @var AuthorizationInterface
+     */
+    public $authorization;
+
+    /**
+     * @var AuthHelper
+     */
+    public $authHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param Context                $context       Parent class purposes
+     * @param Registry               $registry      Parent class purposes
+     * @param RequestInterface       $request       Class to read the requests
+     * @param AuthorizationInterface $authorization Class to get the authorization / ACL
+     * @param AuthHelper             $authHelper    Current extension helper
      */
     public function __construct(
         Context $context,
@@ -39,6 +59,8 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
     }
 
     /**
+     * Button Handler.
+     *
      * @return array
      */
     public function getButtonData()
@@ -63,7 +85,7 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
     }
 
     /**
-     * Get URL for back (reset) button.
+     * Get URL for generate secret key button.
      *
      * @return string
      */

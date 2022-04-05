@@ -3,22 +3,20 @@
  * Copyright © Fiko Borizqy, Inc. All rights reserved.
  * See COPYING.txt for license details.
  *
- * @var $block Fiko\CustomerTwoFactorAuth\Block\Account\Otp
+ * @var \Magento\Framework\View\Element\Template $block
  */
 
-/**
- * @var array
- */
 $otpSession = $block->getData('session') ?: [];
+$customerId = $otpSession['customer_id'] ?? null;
 ?>
 
 <form class="form password forget" action="<?= $block->escapeUrl($block->getUrl('*/*/loginpost')); ?>" method="post" id="form-validate" data-mage-init='{"validation":{}}'>
     <fieldset class="fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')); ?>">
         <div class="field note"><?= $block->escapeHtml(__('Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below.')); ?></div>
-        <div class="field email required">
+        <div class="field required">
             <label for="otp_code" class="label"><span><?= $block->escapeHtml(__('Authentication Code')); ?></span></label>
             <div class="control">
-                <input type="hidden" name="login[customer_id]" value="<?= $block->escapeHtmlAttr($otpSession['customer_id']) ?>" required>
+                <input type="hidden" name="login[customer_id]" value="<?= $block->escapeHtmlAttr($customerId) ?>" required>
                 <input type="text" name="login[otp_code]" alt="Validation Code" id="otp_code" class="input-text" data-mage-init='{"mage/trim-input":{}}' data-validate="{required:true}">
             </div>
         </div>

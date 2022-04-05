@@ -9,48 +9,43 @@ namespace Fiko\CustomerTwoFactorAuth\Controller\Account;
 
 use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Controller\AbstractAccount;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
-use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Login form page. Accepts POST for backward compatibility reasons.
+ * print QR Code image for customer controller.
  */
 class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
 {
     /**
-     * @var Session
+     * @var AuthHelper
      */
-    protected $session;
+    protected $authHelper;
 
     /**
-     * @var PageFactory
+     * Constructor.
+     *
+     * @param Context    $context    Class for parent class purpose
+     * @param AuthHelper $authHelper Helper of the current extension
      */
-    protected $resultPageFactory;
-
     public function __construct(
         Context $context,
-        Session $customerSession,
-        AuthHelper $authHelper,
-        PageFactory $resultPageFactory
+        AuthHelper $authHelper
     ) {
         parent::__construct($context);
 
-        $this->session = $customerSession;
         $this->authHelper = $authHelper;
-        $this->resultPageFactory = $resultPageFactory;
     }
 
     /**
-     * Customer login form page.
+     * print QR Code image for customer handler.
      *
-     * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\View\Result\Page
+     * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\App\Response\Http
      */
     public function execute()
     {
         if (
-            !$this->session->isLoggedIn() ||
+            !$this->authHelper->session->isLoggedIn() ||
             $this->authHelper->session->getData(AuthHelper::QRCODE_VALIDATION) !== true ||
             $this->authHelper->isOtpEnabled()
         ) {

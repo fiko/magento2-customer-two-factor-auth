@@ -7,17 +7,18 @@
 
 namespace Fiko\CustomerTwoFactorAuth\Controller\LoginSecurity;
 
-use Magento\Customer\Api\AccountManagementInterface;
+use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Customer\Controller\AbstractAccount;
 use Magento\Customer\Model\AuthenticationInterface;
-use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\InvalidEmailOrPasswordException;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Message\Manager as MessageManager;
-use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
+use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Disable 2fa action controller.
+ */
 class DisablePost extends AbstractAccount implements HttpPostActionInterface
 {
     /**
@@ -25,33 +26,53 @@ class DisablePost extends AbstractAccount implements HttpPostActionInterface
      */
     protected $resultPageFactory;
 
+    /**
+     * @var AuthenticationInterface
+     */
+    protected $authentication;
+
+    /**
+     * @var MessageManager
+     */
+    protected $messageManager;
+
+    /**
+     * @var AuthHelper
+     */
+    protected $authHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param Context                 $context           Parent class purposes
+     * @param PageFactory             $resultPageFactory Controller response
+     * @param AuthenticationInterface $authentication    Class to authenticate customer
+     * @param AuthHelper              $authHelper        Current extension helper
+     * @param MessageManager          $messageManager    Message manager to send label information to customer
+     */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
-        AccountManagementInterface $accountManagement,
         AuthenticationInterface $authentication,
         AuthHelper $authHelper,
-        MessageManager $messageManager,
-        Session $session
+        MessageManager $messageManager
     ) {
         parent::__construct($context);
 
         $this->resultPageFactory = $resultPageFactory;
-        $this->accountManagement = $accountManagement;
-        $this->session = $session;
         $this->authentication = $authentication;
         $this->messageManager = $messageManager;
         $this->authHelper = $authHelper;
     }
 
     /**
-     * Default customer account page.
+     * Disable 2fa action handler.
      *
      * @return \Magento\Framework\View\Result\Page
      */
     public function execute()
     {
-        $customerId = $this->session->getCustomer()->getId();
+        $customerId = $this->authHelper->session->getCustomer()->getId();
         $currentPassword = $this->getRequest()->getPost('current-password');
 
         try {
@@ -63,7 +84,7 @@ class DisablePost extends AbstractAccount implements HttpPostActionInterface
 
             return $resultRedirect;
         }
-        
+
         if (!$this->authHelper->isOtpEnabled()) {
             /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
             $resultRedirect = $this->resultRedirectFactory->create();
@@ -81,13 +102,5 @@ class DisablePost extends AbstractAccount implements HttpPostActionInterface
         $this->messageManager->addSuccessMessage(__('Two Factor Authentication has been disabled.'));
 
         return $resultRedirect;
-
-        // // $tmp = $this->authentication->authenticate($email, $currentPassword);
-        // header('Content-Type: application/json;');
-        // die(json_encode(is_object($tmp) ? get_class_methods($tmp) : $tmp));
-        // $resultPage = $this->resultPageFactory->create();
-        // die('welcome');
-
-        // return $resultPage;
     }
 }
