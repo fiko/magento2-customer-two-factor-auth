@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright © Fiko Borizqy, Inc. All rights reserved.
+ * Copyright © Fiko Borizqy. All rights reserved.
  * See COPYING.txt for license details.
  */
 

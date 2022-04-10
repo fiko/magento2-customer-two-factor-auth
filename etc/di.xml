@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Fiko Borizqy. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Fiko\CustomerTwoFactorAuth\Block\Adminhtml\Edit\GenerateSecretKeyButton">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Store\Model\StoreManagerInterface\Proxy</argument>
+            <argument name="registry" xsi:type="object">Magento\Customer\Api\CustomerRepositoryInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Fiko\CustomerTwoFactorAuth\Block\LoginSecurity">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\View\Element\Template\Context\proxy</argument>
+        </arguments>
+    </type>
+    <type name="Fiko\CustomerTwoFactorAuth\Controller\Account\Otp">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\App\Action\Context\proxy</argument>
+            <argument name="resultPageFactory" xsi:type="object">Magento\Framework\View\Result\PageFactory\proxy</argument>
+        </arguments>
+    </type>
+    <type name="Fiko\CustomerTwoFactorAuth\Controller\Adminhtml\LoginSecurity\GenerateSecretKey">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Backend\App\Action\Context\Proxy</argument>
+            <argument name="coreRegistry" xsi:type="object">Magento\Framework\Registry\Proxy</argument>
+            <argument name="fileFactory" xsi:type="object">Magento\Framework\App\Response\Http\FileFactory\Proxy</argument>
+            <argument name="customerFactory" xsi:type="object">Magento\Customer\Model\CustomerFactory\Proxy</argument>
+            <argument name="addressFactory" xsi:type="object">Magento\Customer\Model\AddressFactory\Proxy</argument>
+            <argument name="formFactory" xsi:type="object">Magento\Customer\Model\Metadata\FormFactory\Proxy</argument>
+            <argument name="subscriberFactory" xsi:type="object">Magento\Newsletter\Model\SubscriberFactory\Proxy</argument>
+            <argument name="viewHelper" xsi:type="object">Magento\Customer\Helper\View\Proxy</argument>
+            <argument name="random" xsi:type="object">Magento\Framework\Math\Random\Proxy</argument>
+            <argument name="customerRepository" xsi:type="object">Magento\Customer\Api\CustomerRepositoryInterface\Proxy</argument>
+            <argument name="extensibleDataObjectConverter" xsi:type="object">Magento\Framework\Api\ExtensibleDataObjectConverter\Proxy</argument>
+            <argument name="addressMapper" xsi:type="object">Magento\Customer\Model\Address\Mapper\Proxy</argument>
+            <argument name="customerAccountManagement" xsi:type="object">Magento\Customer\Api\AccountManagementInterface\Proxy</argument>
+            <argument name="addressRepository" xsi:type="object">Magento\Customer\Api\AddressRepositoryInterface\Proxy</argument>
+            <argument name="customerDataFactory" xsi:type="object">Magento\Customer\Api\Data\CustomerInterfaceFactory\Proxy</argument>
+            <argument name="addressDataFactory" xsi:type="object">Magento\Customer\Api\Data\AddressInterfaceFactory\Proxy</argument>
+            <argument name="customerMapper" xsi:type="object">Magento\Customer\Model\Customer\Mapper\Proxy</argument>
+            <argument name="dataObjectProcessor" xsi:type="object">Magento\Framework\Reflection\DataObjectProcessor\Proxy</argument>
+            <argument name="dataObjectHelper" xsi:type="object">Magento\Framework\Api\DataObjectHelper\Proxy</argument>
+            <argument name="objectFactory" xsi:type="object">Magento\Framework\DataObjectFactory\Proxy</argument>
+            <argument name="layoutFactory" xsi:type="object">Magento\Framework\View\LayoutFactory\Proxy</argument>
+            <argument name="resultLayoutFactory" xsi:type="object">Magento\Framework\View\Result\LayoutFactory\Proxy</argument>
+            <argument name="resultPageFactory" xsi:type="object">Magento\Framework\View\Result\PageFactory\Proxy</argument>
+            <argument name="resultForwardFactory" xsi:type="object">Magento\Backend\Model\View\Result\ForwardFactory\Proxy</argument>
+            <argument name="resultJsonFactory" xsi:type="object">Magento\Framework\Controller\Result\JsonFactory\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Fiko\CustomerTwoFactorAuth\Helper\Data">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\App\Helper\Context\Proxy</argument>
+            <argument name="session" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+            <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface\Proxy</argument>
+            <argument name="customerRepository" xsi:type="object">Magento\Customer\Api\CustomerRepositoryInterface\Proxy</argument>
+        </arguments>
+    </type>
+</config>
