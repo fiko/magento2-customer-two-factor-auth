@@ -8,7 +8,6 @@
 namespace Fiko\CustomerTwoFactorAuth\Helper;
 
 use Base32\Base32;
-use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Exception;
@@ -119,7 +118,7 @@ class Data extends AbstractHelper
         // seed for iOS devices to avoid errors with barcode
         $seed = 'abcd';
 
-        return preg_replace('/[^A-Za-z0-9]/', '', Base32::encode($seed.$secret));
+        return preg_replace('/[^A-Za-z0-9]/', '', Base32::encode($seed . $secret));
     }
 
     /**
@@ -209,10 +208,26 @@ class Data extends AbstractHelper
      */
     public function getQrCodeAsPng(): string
     {
+        // @codingStandardsIgnoreStart
         $qrCode = new QrCode($this->getProvisioningUrl($this->getCustomer()));
         $qrCode->setSize(400);
         $qrCode->setMargin(0);
-        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
+
+        // Endoird QRCode version 4.0.0
+        if (class_exists(\Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh::class)) {
+            $qrCode->setErrorCorrectionLevel(new \Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh());
+            $qrCode->setForegroundColor(new \Endroid\QrCode\Color\Color(0, 0, 0, 0));
+            $qrCode->setBackgroundColor(new \Endroid\QrCode\Color\Color(255, 255, 255, 0));
+            $qrCode->setEncoding(new \Endroid\QrCode\Encoding\Encoding('UTF-8'));
+
+            $writer = new PngWriter();
+            $pngData = $writer->write($qrCode);
+
+            return $pngData->getString();
+        }
+
+        // Endroid version 3
+        $qrCode->setErrorCorrectionLevel(\Endroid\QrCode\ErrorCorrectionLevel::HIGH());
         $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
         $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
         $qrCode->setLabelFontSize(16);
@@ -221,6 +236,7 @@ class Data extends AbstractHelper
         $writer = new PngWriter();
 
         return $writer->writeString($qrCode);
+        // @codingStandardsIgnoreEnd
     }
 
     /**
