@@ -5,13 +5,15 @@
  * See COPYING.txt for license details.
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" 
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <title>Validate Your OTP</title>
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Magento\Framework\View\Element\Template" name="fiko-login-otp-form" template="Fiko_CustomerTwoFactorAuth::form/otp.phtml" cacheable="false">
+            <block class="Magento\Framework\View\Element\Template" name="fiko-login-otp-form" 
+                   template="Fiko_CustomerTwoFactorAuth::form/otp.phtml" cacheable="false">
                 <container name="form.additional.info" as="form_additional_info"/>
             </block>
         </referenceContainer>

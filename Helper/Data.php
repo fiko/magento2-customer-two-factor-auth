@@ -10,25 +10,25 @@ namespace Fiko\CustomerTwoFactorAuth\Helper;
 use Base32\Base32;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
-use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Data\Customer;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Validator\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use OTPHP\TOTP;
 use Psr\Log\LoggerInterface;
 
 class Data extends AbstractHelper
 {
-    const TOTP_SECRET = 'totp_secret';
-    const IS_ENABLE = 'is_totp_enable';
-    const OTP_SESSION = 'fiko_otp_login';
-    const QRCODE_VALIDATION = 'qr_code_validation';
-    const ENABLING_2FA = '2fa_enabling';
-    const ACL_GENERATE_SECRET_KEY = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
+    public const TOTP_SECRET = 'totp_secret';
+    public const IS_ENABLE = 'is_totp_enable';
+    public const OTP_SESSION = 'fiko_otp_login';
+    public const QRCODE_VALIDATION = 'qr_code_validation';
+    public const ENABLING_2FA = '2fa_enabling';
+    public const ACL_GENERATE_SECRET_KEY = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
     /**
      * Constructor.
@@ -88,7 +88,7 @@ class Data extends AbstractHelper
     }
 
     /**
-     * set Reload Page to be true or false.
+     * Set Reload Page to be true or false.
      *
      * @param bool $isReload is the current page is refreshed or not
      */
@@ -132,7 +132,7 @@ class Data extends AbstractHelper
     {
         $isEnable = $customer->getCustomAttribute(self::IS_ENABLE);
 
-        return !is_null($isEnable) ? (bool) $isEnable->getValue() : false;
+        return $isEnable !== null ? (bool) $isEnable->getValue() : false;
     }
 
     /**
@@ -147,11 +147,11 @@ class Data extends AbstractHelper
         $customer = $customer ?: $this->getCustomer();
         $attribute = $customer->getCustomAttribute(self::TOTP_SECRET);
 
-        return !is_null($attribute) ? $attribute->getValue() : null;
+        return $attribute !== null ? $attribute->getValue() : null;
     }
 
     /**
-     * get customer TOTP Object.
+     * Get customer TOTP Object.
      *
      * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
      */
@@ -167,7 +167,6 @@ class Data extends AbstractHelper
      *
      * @param string        $otpToken token submitted by customer
      * @param Customer|null $customer Customer object
-     * @param string        $otpToken OTP submited by customer
      *
      * @return bool is it succeed or failed on OTP verification
      */
@@ -260,7 +259,7 @@ class Data extends AbstractHelper
     }
 
     /**
-     * check whether customer OTP is enable or not.
+     * Check whether customer OTP is enable or not.
      *
      * @param Customer|null $customer customer object or data
      *

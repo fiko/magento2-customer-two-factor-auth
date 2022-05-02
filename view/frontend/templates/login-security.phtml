@@ -9,14 +9,21 @@
 <div class="block block-addresses-list">
     <div class="block-title"><strong><?= $block->escapeHtml(__('Two Factor Authentication')); ?></strong></div>
     <div class="block-content">
-        <p class="empty"><?= $block->escapeHtml(__('Status')); ?>: <strong><?= $block->isOtpEnabled() ? $block->escapeHtml(__('Enabled')) : $block->escapeHtml(__('Disabled')); ?></strong></p>
+        <p class="empty">
+            <?= $block->escapeHtml(__('Status')); ?>: 
+            <strong>
+                <?= $block->isOtpEnabled() ? $block->escapeHtml(__('Enabled')) : $block->escapeHtml(__('Disabled')); ?>
+            </strong>
+        </p>
         <?php if ($block->isOtpEnabled()): ?>
             <div class="empty message success">
                 <span><?= $block->escapeHtml(__('You have already activate 2 Factor Authentication.')); ?></span>
             </div>
         <?php else: ?>
             <div class="empty message warning">
-                <span><?= $block->escapeHtml(__('To protect your account, you can use Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to have additional validation on login page.')); ?></span>
+                <span>
+                    <?= $block->escapeHtml(__('To protect your account, you can use Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to have additional validation on login page.')); ?>
+                </span>
             </div>
         <?php endif; ?>
     </div>
@@ -25,9 +32,19 @@
 <div class="actions-toolbar">
     <div class="primary">
         <?php if ($block->isOtpEnabled()): ?>
-            <a href="<?= $block->escapeHtmlAttr($block->getUrl('*/*/disable')); ?>" alt="" class="action primary add"><span><?= $block->escapeHtml(__('Disable Login Security')); ?></span></a>
-        <?php else : ?>
-            <a href="<?= $block->escapeHtmlAttr($block->getUrl('*/*/enable')); ?>" alt="" class="action primary add"><span><?= $block->escapeHtml(__('Enable Login Security')); ?></span></a>
+            <a href="<?= $block->escapeHtmlAttr($block->getUrl('*/*/disable')); ?>" 
+                alt="" 
+                class="action primary add"
+            >
+                <span><?= $block->escapeHtml(__('Disable Login Security')); ?></span>
+            </a>
+        <?php else: ?>
+            <a href="<?= $block->escapeHtmlAttr($block->getUrl('*/*/enable')); ?>"
+                alt=""
+                class="action primary add"
+            >
+                <span><?= $block->escapeHtml(__('Enable Login Security')); ?></span>
+            </a>
         <?php endif; ?>
     </div>
 </div>

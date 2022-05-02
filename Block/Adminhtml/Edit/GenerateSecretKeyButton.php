@@ -69,8 +69,7 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
         $customer = $this->authHelper->getCustomer($customerId);
         $deleteConfirmMsg = __("Are you sure you want to re-generate the customer's 2FA secret key?");
 
-        if (
-            $this->authHelper->isOtpEnabled($customer) ||
+        if ($this->authHelper->isOtpEnabled($customer) ||
             $this->authorization->isAllowed(AuthHelper::ACL_GENERATE_SECRET_KEY) === false
         ) {
             return [];
@@ -78,7 +77,7 @@ class GenerateSecretKeyButton extends GenericButton implements ButtonProviderInt
 
         return [
             'label' => __('Generate 2FA Secret Key'),
-            'on_click' => 'deleteConfirm("'.$deleteConfirmMsg.'", "'.$this->getGenerateSecretKeyUrl().'")',
+            'on_click' => 'deleteConfirm("' . $deleteConfirmMsg . '", "' . $this->getGenerateSecretKeyUrl() . '")',
             'class' => 'fiko-generate-2fa-key',
             'sort_order' => 50,
         ];

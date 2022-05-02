@@ -7,7 +7,6 @@
 
 namespace Fiko\CustomerTwoFactorAuth\Controller\Adminhtml\LoginSecurity;
 
-use Exception;
 use Fiko\CustomerTwoFactorAuth\Helper\Data as AuthHelper;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\ForwardFactory;
@@ -32,6 +31,7 @@ use Magento\Framework\DataObjectFactory as ObjectFactory;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use Magento\Framework\Registry;
+use Magento\Framework\Validator\Exception;
 use Magento\Framework\View\LayoutFactory;
 use Magento\Framework\View\Result\LayoutFactory as ResultLayoutFactory;
 use Magento\Framework\View\Result\PageFactory;
@@ -141,7 +141,7 @@ class GenerateSecretKey extends Index implements HttpGetActionInterface
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
+    public const ADMIN_RESOURCE = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
     /**
      * Generate Secret Key handler.
