@@ -75,7 +75,7 @@ class EnablePost extends AbstractAccount implements HttpPostActionInterface
         }
 
         // validate the token parameter
-        if (is_null($otpToken)) {
+        if ($otpToken === null) {
             $resultRedirect->setPath('*/*/enable');
 
             return $resultRedirect;

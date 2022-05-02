@@ -7,26 +7,41 @@
  */
 ?>
 
-<form class="form form-edit-account" action="<?= $block->escapeUrl($block->getUrl('*/*/enablepost')); ?>" method="post" id="form-validate" autocomplete="off" data-mage-init='{"validation": {}}'>
+<form class="form form-edit-account" action="<?= $block->escapeUrl($block->getUrl('*/*/enablepost')); ?>" 
+      method="post" id="form-validate" autocomplete="off" data-mage-init='{"validation": {}}'>
     <fieldset class="fieldset info">
         <?= $block->getBlockHtml('formkey'); ?>
-        <legend class="legend"><span><?= $block->escapeHtml(__('Enable Two Factor Authentication')); ?></span></legend><br>
+        <legend class="legend">
+            <span><?= $block->escapeHtml(__('Enable Two Factor Authentication')); ?></span>
+        </legend><br>
 
         <div class="field">
             <div class="message info">
-                <span>Scan this QR Code using Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to secure your account.</span>
+                <span>
+                    <?= $escaper->escapeHtml('Scan this QR Code using Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to secure your account.'); ?>
+                </span>
             </div>
             <center><img src="<?= $block->escapeUrl($block->getUrl('*/account/otpqrcodeimage')); ?>" alt="" /></center>
         </div>
 
         <div class="field">
-            <i><?= __('if you can not scan the QR Code above, copy this code to your authenticator app : %1', "<strong>{$block->authHelper->getCustomerOtpSecret()}</strong>"); ?></i>
+            <i>
+                <?= __(
+                    'if you can not scan the QR Code above, copy this code to your authenticator app : %1',
+                    "<strong>{$block->authHelper->getCustomerOtpSecret()}</strong>"
+                ); ?>
+            </i>
         </div>
 
         <div class="field required">
-            <label class="label" for="otp-token"><span><?= $block->escapeHtml(__('Confirmation Code')); ?></span></label>
+            <label class="label" for="otp-token">
+                <span><?= $block->escapeHtml(__('Confirmation Code')); ?></span>
+            </label>
             <div class="control">
-                <input type="text" id="otp-token" name="otp-token" title="<?= $block->escapeHtmlAttr(__('Confirmation Code')); ?>" class="input-text required-entry" data-validate="{required:true}" aria-required="true" required data-mage-init='{"mage/trim-input":{}}'>
+                <input type="text" id="otp-token" name="otp-token" 
+                       title="<?= $block->escapeHtmlAttr(__('Confirmation Code')); ?>" 
+                       class="input-text required-entry" data-validate="{required:true}" aria-required="true" 
+                       required data-mage-init='{"mage/trim-input":{}}'>
             </div>
         </div>
     </fieldset>

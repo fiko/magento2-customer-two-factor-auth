@@ -36,7 +36,9 @@ class CustomerAttributeEnableTotp implements DataPatchInterface, PatchRevertable
     private $eavConfig;
 
     /**
-     * AccountPurposeCustomerAttribute constructor.
+     * @param ModuleDataSetupInterface $setup
+     * @param Config $eavConfig
+     * @param CustomerSetupFactory $customerSetupFactory
      */
     public function __construct(
         ModuleDataSetupInterface $setup,
@@ -68,7 +70,7 @@ class CustomerAttributeEnableTotp implements DataPatchInterface, PatchRevertable
         $customerSetup->addAttribute(Customer::ENTITY, AuthHelper::IS_ENABLE, [
             'type' => 'int',
             'input' => 'boolean',
-            'source' => 'Magento\Eav\Model\Entity\Attribute\Source\Boolean',
+            'source' => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
             'label' => 'Enable 2FA',
             'required' => false,
             'default' => 0,

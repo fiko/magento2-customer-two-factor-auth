@@ -38,7 +38,7 @@ class LoginSecurity extends Template
     /**
      * Checking whether the customer OTP is enabled or not.
      *
-     * @return bool 
+     * @return bool
      */
     public function isOtpEnabled()
     {

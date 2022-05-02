@@ -65,8 +65,20 @@ class LoginPost
      */
     protected $storeManager;
 
+    /**
+     * @var bool
+     */
     private $otpSucceed = false;
 
+    /**
+     * @param Context $context
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param Session $session
+     * @param AuthHelper $authHelper
+     * @param CustomerRepository $customerRepository
+     * @param StoreManagerInterface $storeManager
+     * @param Validator $formKeyValidator
+     */
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
@@ -90,7 +102,7 @@ class LoginPost
      * * customer login process to be redirected to OTP page Handler.
      *
      * @param \Magento\Customer\Controller\Account\LoginPost $subject Main class
-     * @param callable                                       $proceed main method
+     * @param callable $proceed main method
      *
      * @return void
      */
@@ -142,7 +154,7 @@ class LoginPost
                 } catch (AuthenticationException $e) {
                     $message = __(
                         'The account sign-in was incorrect or your account is disabled temporarily. '
-                        .'Please wait and try again later.'
+                        . 'Please wait and try again later.'
                     );
                 } catch (LocalizedException $e) {
                     $message = $e->getMessage();

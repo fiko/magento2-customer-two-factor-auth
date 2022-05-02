@@ -38,14 +38,13 @@ class OtpQrCodeImage extends AbstractAccount implements HttpGetActionInterface
     }
 
     /**
-     * print QR Code image for customer handler.
+     * Print QR Code image for customer handler.
      *
      * @return \Magento\Framework\Controller\Result\Redirect|\Magento\Framework\App\Response\Http
      */
     public function execute()
     {
-        if (
-            !$this->authHelper->session->isLoggedIn() ||
+        if (!$this->authHelper->session->isLoggedIn() ||
             $this->authHelper->session->getData(AuthHelper::QRCODE_VALIDATION) !== true ||
             $this->authHelper->isOtpEnabled()
         ) {

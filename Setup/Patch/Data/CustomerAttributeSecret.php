@@ -36,7 +36,9 @@ class CustomerAttributeSecret implements DataPatchInterface, PatchRevertableInte
     private $eavConfig;
 
     /**
-     * AccountPurposeCustomerAttribute constructor.
+     * @param ModuleDataSetupInterface $setup
+     * @param Config $eavConfig
+     * @param CustomerSetupFactory $customerSetupFactory
      */
     public function __construct(
         ModuleDataSetupInterface $setup,
