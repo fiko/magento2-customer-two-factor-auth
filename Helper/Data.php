@@ -1,9 +1,10 @@
 <?php
-
 /**
- * Copyright © Fiko Borizqy, Inc. All rights reserved.
+ * Copyright © Fiko Borizqy. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+declare(strict_types=1);
 
 namespace Fiko\CustomerTwoFactorAuth\Helper;
 
@@ -30,29 +31,38 @@ class Data extends AbstractHelper
     public const ENABLING_2FA = '2fa_enabling';
     public const ACL_GENERATE_SECRET_KEY = 'Fiko_CustomerTwoFactorAuth::generate_secret_key';
 
+    /** @var Session */
+    public $session;
+
+    /** @var StoreManagerInterface */
+    public $storeManager;
+
+    /** @var CustomerRepositoryInterface */
+    public $customerRepository;
+
+    /** @var LoggerInterface */
+    public $logger;
+
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param Context                     $context            Parent class purposes
-     * @param Session                     $session            Session class
-     * @param StoreManagerInterface       $storeManager       Store manager class
-     * @param CustomerRepositoryInterface $customerRepository Customer repository purposes
-     * @param LoggerInterface             $logger             Loggin purposes
-     * @param array                       $data               extra data that might be useful for type / VirtualType
+     * @param Context $context
+     * @param Session $session
+     * @param StoreManagerInterface $storeManager
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
         Session $session,
         StoreManagerInterface $storeManager,
         CustomerRepositoryInterface $customerRepository,
-        LoggerInterface $logger,
-        array $data = []
+        LoggerInterface $logger
     ) {
         parent::__construct($context);
 
         $this->session = $session;
         $this->storeManager = $storeManager;
-        $this->data = $data;
         $this->customerRepository = $customerRepository;
         $this->logger = $logger;
     }
@@ -109,8 +119,6 @@ class Data extends AbstractHelper
 
     /**
      * Generate random secret.
-     *
-     * @throws Exception
      */
     public function generateSecret(): string
     {
@@ -124,7 +132,7 @@ class Data extends AbstractHelper
     /**
      * Check does the customer enabling OTP Login.
      *
-     * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
+     * @param Customer $customer Customer object data
      *
      * @return int string of the code or null
      */
@@ -138,7 +146,7 @@ class Data extends AbstractHelper
     /**
      * Get Customer Secret code to generate TOTP.
      *
-     * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
+     * @param Customer $customer Customer object data
      *
      * @return string|null string of the code or null
      */
@@ -153,7 +161,7 @@ class Data extends AbstractHelper
     /**
      * Get customer TOTP Object.
      *
-     * @param \Magento\Customer\Model\Data\Customer $customer Customer object data
+     * @param Customer $customer Customer object data
      */
     public function getCustomerOtp(Customer $customer): TOTP
     {

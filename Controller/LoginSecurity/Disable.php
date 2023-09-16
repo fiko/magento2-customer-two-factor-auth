@@ -18,10 +18,11 @@ use Magento\Framework\View\Result\PageFactory;
  */
 class Disable extends AbstractAccount implements HttpGetActionInterface
 {
-    /**
-     * @var PageFactory
-     */
+    /** @var PageFactory */
     protected $resultPageFactory;
+
+    /** @var AuthHelper */
+    protected $authHelper;
 
     /**
      * Constructor.

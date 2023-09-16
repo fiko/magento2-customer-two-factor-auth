@@ -7,12 +7,12 @@
  */
 ?>
 
-<form class="form form-edit-account" action="<?= $block->escapeUrl($block->getUrl('*/*/enablepost')); ?>" 
+<form class="form form-edit-account" action="<?= $escaper->escapeUrl($block->getUrl('*/*/enablepost')); ?>"
       method="post" id="form-validate" autocomplete="off" data-mage-init='{"validation": {}}'>
     <fieldset class="fieldset info">
         <?= $block->getBlockHtml('formkey'); ?>
         <legend class="legend">
-            <span><?= $block->escapeHtml(__('Enable Two Factor Authentication')); ?></span>
+            <span><?= $escaper->escapeHtml(__('Enable Two Factor Authentication')); ?></span>
         </legend><br>
 
         <div class="field">
@@ -21,7 +21,7 @@
                     <?= $escaper->escapeHtml('Scan this QR Code using Google Authenticator / Microsoft Authenticator / 2FA Authenticator / etc to secure your account.'); ?>
                 </span>
             </div>
-            <center><img src="<?= $block->escapeUrl($block->getUrl('*/account/otpqrcodeimage')); ?>" alt="" /></center>
+            <center><img src="<?= $escaper->escapeUrl($block->getUrl('*/account/otpqrcodeimage')); ?>" alt="" /></center>
         </div>
 
         <div class="field">
@@ -35,11 +35,11 @@
 
         <div class="field required">
             <label class="label" for="otp-token">
-                <span><?= $block->escapeHtml(__('Confirmation Code')); ?></span>
+                <span><?= $escaper->escapeHtml(__('Confirmation Code')); ?></span>
             </label>
             <div class="control">
                 <input type="text" id="otp-token" name="otp-token" 
-                       title="<?= $block->escapeHtmlAttr(__('Confirmation Code')); ?>" 
+                       title="<?= $escaper->escapeHtmlAttr(__('Confirmation Code')); ?>"
                        class="input-text required-entry" data-validate="{required:true}" aria-required="true" 
                        required data-mage-init='{"mage/trim-input":{}}'>
             </div>
@@ -51,12 +51,12 @@
     <div class="actions-toolbar">
         <div class="primary">
             <button type="submit" class="action save primary" title="Save">
-                <span><?= $block->escapeHtml(__('Save')); ?></span>
+                <span><?= $escaper->escapeHtml(__('Save')); ?></span>
             </button>
         </div>
         <div class="secondary">
-            <a class="action" href="<?= $block->escapeUrl($block->getUrl('*/*')); ?>">
-                <span>&larr; <?= $block->escapeHtml(__('Cancel')); ?></span>
+            <a class="action" href="<?= $escaper->escapeUrl($block->getUrl('*/*')); ?>">
+                <span>&larr; <?= $escaper->escapeHtml(__('Cancel')); ?></span>
             </a>
         </div>
     </div>
