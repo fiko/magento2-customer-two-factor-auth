@@ -2,7 +2,7 @@
     "name": "fiko/magento2-customer-two-factor-auth",
     "description": "2 factor authentication for Customer",
     "type": "magento2-module",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "license": [
         "MIT"
     ],
