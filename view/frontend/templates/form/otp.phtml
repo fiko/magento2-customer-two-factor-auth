@@ -10,13 +10,13 @@ $otpSession = $block->getData('session') ?: [];
 $customerId = $otpSession['customer_id'] ?? null;
 ?>
 
-<form class="form password forget" action="<?= $block->escapeUrl($block->getUrl('*/*/loginpost')); ?>" method="post" id="form-validate" data-mage-init='{"validation":{}}'>
-    <fieldset class="fieldset" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')); ?>">
-        <div class="field note"><?= $block->escapeHtml(__('Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below.')); ?></div>
+<form class="form password forget" action="<?= $escaper->escapeUrl($block->getUrl('*/*/loginpost')); ?>" method="post" id="form-validate" data-mage-init='{"validation":{}}'>
+    <fieldset class="fieldset" data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')); ?>">
+        <div class="field note"><?= $escaper->escapeHtml(__('Open your authentication app (Google Authenticator, Microsoft Authenticator, 2FA Authenticator, etc) and type the code into the box below.')); ?></div>
         <div class="field required">
-            <label for="otp_code" class="label"><span><?= $block->escapeHtml(__('Authentication Code')); ?></span></label>
+            <label for="otp_code" class="label"><span><?= $escaper->escapeHtml(__('Authentication Code')); ?></span></label>
             <div class="control">
-                <input type="hidden" name="login[customer_id]" value="<?= $block->escapeHtmlAttr($customerId) ?>" required>
+                <input type="hidden" name="login[customer_id]" value="<?= $escaper->escapeHtmlAttr($customerId) ?>" required>
                 <input type="text" name="login[otp_code]" alt="Validation Code" id="otp_code" class="input-text" data-mage-init='{"mage/trim-input":{}}' data-validate="{required:true}">
             </div>
         </div>
@@ -24,10 +24,10 @@ $customerId = $otpSession['customer_id'] ?? null;
     </fieldset>
     <div class="actions-toolbar">
         <div class="primary">
-            <button type="submit" class="action submit primary"><span><?= $block->escapeHtml(__('Continue')); ?></span></button>
+            <button type="submit" class="action submit primary"><span><?= $escaper->escapeHtml(__('Continue')); ?></span></button>
         </div>
         <div class="secondary">
-            <a class="action secondary" href="<?= $block->escapeUrl($block->getUrl('*/*/login')); ?>"><span><?= $block->escapeHtml(__('Go Back')); ?></span></a>
+            <a class="action secondary" href="<?= $escaper->escapeUrl($block->getUrl('*/*/login')); ?>"><span><?= $escaper->escapeHtml(__('Go Back')); ?></span></a>
         </div>
     </div>
 </form>
